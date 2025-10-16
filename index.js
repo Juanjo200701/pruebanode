@@ -10,6 +10,10 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', './views');  
 
+//definir la ruta public
+app.use(express.static('public'));
+
+//routing
 app.use("/auth", usuarioRoutes)
 
 //Definir puerto
