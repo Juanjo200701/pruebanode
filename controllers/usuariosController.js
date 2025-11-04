@@ -2,6 +2,8 @@ import { check, validationResult } from "express-validator";
 
 import Usuario from '../models/Usuarios.js';
 
+import bcrypt from 'bcrypt';        
+
 const formularioLogin = (req, res) => {
     res.render('auth/login' ,{
         tituloPagina: "Inicio de Sesión",
@@ -52,7 +54,7 @@ const registrar = async (req, res) => {
     }
 
     //validar si el correo ya existe en la base de datos
-    const email = req.body;
+    const { email } = req.body;
     const existeUsuario = await Usuario.findOne({ where: { email } });
 
     if(existeUsuario){
@@ -66,8 +68,14 @@ const registrar = async (req, res) => {
         });
     }
 
+    const passwordHasheada = await bcrypt.hash(req.body.password, 10);
+
     // Si no existe, crear el usuario
-    const usuarios = await Usuario.create(req.body);
+    const usuarios = await Usuario.create({
+        nombre: req.body.nombre,
+        email: req.body.email,
+        password: passwordHasheada
+    });
     res.json(usuarios);
 
 }
