@@ -51,10 +51,24 @@ const registrar = async (req, res) => {
         })
     }
 
+    //validar si el correo ya existe en la base de datos
+    const email = req.body;
+    const existeUsuario = await Usuario.findOne({ where: { email } });
+
+    if(existeUsuario){
+        return res.render('auth/registro', {
+            tituloPagina: "Registro de Usuario",
+            errores: [{ msg: 'Ese correo ya está registrado' }],
+            usuario: {
+                nombre: req.body.nombre,
+                email: req.body.email,
+            }
+        });
+    }
+
+    // Si no existe, crear el usuario
     const usuarios = await Usuario.create(req.body);
     res.json(usuarios);
-
-
 
 }
 
