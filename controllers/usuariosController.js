@@ -2,8 +2,9 @@
 import { check, validationResult } from "express-validator";
 import bcrypt from 'bcrypt';
 //modelos
-import Usuario from '../models/Usuarios.js';
 import { generarId } from '../helpers/tokens.js';
+import Usuario from '../models/Usuarios.js';
+import { emailRegistro } from "../helpers/emails.js";
 
 const formularioLogin = (req, res) => {
     res.render('auth/login' ,{
@@ -76,6 +77,15 @@ const registrar = async (req, res) => {
         password,
         token: generarId(),
     });
+
+    //enviar el email
+    emailRegistro({
+        nombre: usuarios.nombre,
+        email: usuarios.email,
+        token: usuarios.token,
+    });
+
+
     
     //Mostrar mensaje de confirmación
     res.render('templates/mensaje', {
@@ -83,6 +93,20 @@ const registrar = async (req, res) => {
         mensaje: "Se ha enviado un correo de confirmación, Da clic en el enlace"
     })
 
+};
+
+//funcion que va a confirmar el correo
+const confirmar = async (req, res ) => {
+    const { token } = req.params;
+
+    console.log(token);
+
+    //Validar que el token sea verdadero
+    const usuario = await Usuario.findOne({ where: { token } });
+
+    console.log(usuario);
+
+    //confirmar la cuenta
 }
 
 const formularioOlvidePassword = (req, res) => {
@@ -92,4 +116,4 @@ const formularioOlvidePassword = (req, res) => {
 };
 
 
-export { formularioLogin, formularioRegistro, registrar, formularioOlvidePassword };
+export { formularioLogin, formularioRegistro, registrar, confirmar, formularioOlvidePassword };
