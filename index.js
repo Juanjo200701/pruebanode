@@ -1,9 +1,20 @@
 import express from 'express';
+import csurf from 'csurf';
+import cookieParser from 'cookie-parser';
 import usuarioRoutes from './routes/usuariosRoutes.js';
 import db from './config/db.js';
 
 //Crear app
 const app = express();
+
+//Habilitar lectura de los forms
+app.use(express.urlencoded({ extended: true }));
+
+//habilitar cookie parser
+app.use(cookieParser());
+
+//habilitar csurf
+app.use(csurf({ cookie: true }));
 
 //conexion a la db
 try {
@@ -15,8 +26,6 @@ try {
 }
 
 
-//Habilitar lectura de los forms
-app.use(express.urlencoded({ extended: true }));
 
 //habilitar pug
 

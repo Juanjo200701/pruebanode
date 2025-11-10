@@ -7,6 +7,7 @@ import Usuario from '../models/Usuarios.js';
 import { emailRegistro } from "../helpers/emails.js";
 
 const formularioLogin = (req, res) => {
+    console.log(req.csrfToken());
     res.render('auth/login' ,{
         tituloPagina: "Inicio de Sesión",
     });
@@ -15,6 +16,7 @@ const formularioLogin = (req, res) => {
 const formularioRegistro = (req, res) => {
     res.render('auth/registro', {
         tituloPagina: "Registro de Usuario",
+        csrfToken: req.csrfToken(),
     });
 };
 
@@ -48,6 +50,7 @@ const registrar = async (req, res) => {
         return res.render('auth/registro', {
             tituloPagina: "Registro de Usuario",
             errores: resultado.array(),
+            csrfToken: req.csrfToken(),
             usuario: {
                 nombre: req.body.nombre,
                 email: req.body.email,
@@ -62,6 +65,7 @@ const registrar = async (req, res) => {
     if(existeUsuario){
         return res.render('auth/registro', {
             tituloPagina: "Registro de Usuario",
+            csrfToken: req.csrfToken(),
             errores: [{ msg: 'Ese correo ya está registrado' }],
             usuario: {
                 nombre: req.body.nombre,
