@@ -107,7 +107,24 @@ const confirmar = async (req, res ) => {
     console.log(usuario);
 
     //confirmar la cuenta
-}
+    if(!usuario){
+        return res.render('auth/confirmar-cuenta', {
+            tituloPagina: "Error al crear cuenta",
+            mensaje: "Hubo un error al confirmar tu cuenta, intenta de nuevo",
+            error: true,
+        });
+    }
+
+    //validar la informacion y mandarla a la base de datos
+    usuario.token = null;
+    usuario.confirmado = true;
+    await usuario.save();
+
+    res.render('auth/confirmar-cuenta', {
+        tituloPagina: "Cuenta confirmada",
+        mensaje: "La cuenta se confirmó correctamente, ya puedes iniciar sesión",
+    })
+};
 
 const formularioOlvidePassword = (req, res) => {
     res.render('auth/olvide-password', {
