@@ -42,8 +42,6 @@ const autenticar = async (req, res) => {
     where: { email },
   });
 
-  console.log(usuario);
-
   if (!usuario) {
     return res.render("auth/login", {
       tituloPagina: "Iniciar Sesion",
@@ -72,7 +70,13 @@ const autenticar = async (req, res) => {
 
   //autenticar al usuario
   const token = generarJWT({ id: usuario.id, nombre: usuario.nombre });
-  console.log(token);
+
+  //Almacenar una cookie
+  return res
+    .cookie("_token", token, {
+    httpOnly: true,
+  })
+    .redirect("/mis-propiedades");
 
   
 };
