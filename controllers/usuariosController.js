@@ -1,6 +1,6 @@
 import { check, validationResult } from "express-validator";
 import bcrypt from "bcrypt";
-import { generarId } from "../helpers/tokens.js";
+import { generarJWT, generarId } from "../helpers/tokens.js";
 import Usuario from "../models/Usuarios.js";
 import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js";
 
@@ -69,6 +69,10 @@ const autenticar = async (req, res) => {
       errores: [{ msg: "La contraseña es incorrecta" }],
     });
   }
+
+  //autenticar al usuario
+  const token = generarJWT({ id: usuario.id, nombre: usuario.nombre });
+  console.log(token);
 
   
 };
